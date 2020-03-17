@@ -1,0 +1,6 @@
+<form action="/reset/:token" method="POST">
+    <input type="hidden" name="userId" value="<%= user._id %>">
+    <input type="password" name="password" placeholder="nytt lösenord">
+    <input type="password" placeholder="Upprepa lösenordet">
+    <button type="submit">Spara nytt lösenord</button>
+</form>
