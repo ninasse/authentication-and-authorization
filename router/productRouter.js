@@ -11,11 +11,12 @@ router.route('/products')
     .get(async (req, res) => {
         const productsPerPage = 4;
         const page = Number(req.query.page)
+        const prevPage = page - 1
         // HITTA ANTALET PRODUKTER I DATABASEN
         const productAmount = await Product.find().countDocuments();
 
         const products = await Product.find().populate('user -password')
-            .skip(productsPerPage * (page - 1))
+            .skip(productsPerPage * prevPage)
             .limit(productsPerPage)
         res.render('product', {
             //ANTAL PRODUKTER SOM VISAS PER SIDA
@@ -32,10 +33,10 @@ router.route('/products')
             hasPrevPage: page > 1,
             // SISTA SIDAN
             lastPage: Math.ceil(productAmount / productsPerPage),
-            // FÖREGÅENDE SIDA
-            nextPage: page + 1,
             // NÄSTA SIDA
-            prevPage: page - 1
+            nextPage: page + 1,
+            // FÖREGÅENDE SIDA
+            prevPage
         })
     })
 

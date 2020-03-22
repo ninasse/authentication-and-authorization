@@ -13,7 +13,7 @@
     <div>
         <% let counter = 1 %>
         <% for(let i = productsPerPage; i < productAmount; i += productsPerPage) { %>
-        <a href="/products/?page=<%counter%>"><%= counter%></a>
+        <a href="/products/?page=<%= counter%>"><%= counter%></a>
         <% counter++; %>
         <% } %>
     </div>
