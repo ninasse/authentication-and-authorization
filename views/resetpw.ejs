@@ -2,9 +2,11 @@
 
 <body>
     <form action="/resetpw" method="POST">
-        <input type="email" name="resetMail">
-        <button type="submit">Skicka lösenord</button>
+        <input type="email" name="resetMail" placeholder="email address">
+        <button type="submit">Get a new password!</button>
     </form>
+
+    <%- include ("logout.ejs") %>
 </body>
 
 </html>
