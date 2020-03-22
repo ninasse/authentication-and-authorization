@@ -9,7 +9,6 @@ const nodemailer = require('nodemailer');
 const nodemailerSendGridTransport = require('nodemailer-sendgrid-transport');
 const crypto = require('crypto');
 
-
 const router = express.Router();
 
 const transport = nodemailer.createTransport(nodemailerSendGridTransport({
@@ -17,6 +16,12 @@ const transport = nodemailer.createTransport(nodemailerSendGridTransport({
         api_key: config.mail
     }
 }))
+
+router.route('/')
+
+    .get((req, res) => {
+        res.render('index.ejs')
+    })
 
 router.route('/signup')
 
@@ -34,20 +39,14 @@ router.route('/signup')
 
         transport.sendMail({
             to: newUser.email,
-            from: 'nina.abbasiosterberg@medieinstitutet.se',
+            from: 'noreply@testapp.se',
             subject: 'Account created',
-            html: '<h1>Välkommen' + newUser.name + '</h1>'
+            html: '<h1>Wellcome' + newUser.name + '</h1>'
         })
 
         const user = await User.find({ email: req.body.email });
         // res.redirect('/')
-        res.send('Välkommen ditt konto har skapats')
-    })
-
-router.route('/')
-
-    .get((req, res) => {
-        res.send('Grattis du har nu ett konto!')
+        res.send('Congrats! You just created an account!')
     })
 
 router.route('/login')
@@ -80,7 +79,7 @@ router.route('/login')
 
                     // OM COOKIE INTE FINNS SÅ SKA EN COOKIE SKAPAS
                     if (!cookie) {
-                        res.cookie('jsonwebtoken', token, { maxAge: 3600000, httpOnly: true })
+                        res.cookie('jsonwebtoken', token, { maxAge: 36000000, httpOnly: true })
                     }
                 }
                 // OM LÖSENORDET STÄMMER VISA USERPROFILE
@@ -91,6 +90,7 @@ router.route('/login')
 
 router.route('/useraccount')
     .get(verifyToken, (req, res) => {
+        console.log('Body .user är', req.user)
         res.send('You are authorized')
     })
 
@@ -119,7 +119,7 @@ router.route('/resetpw')
             await transport.sendMail({
                 to: isUser.email,
                 from: '<no-reply>Medieinstitutettestar@test.se',
-                subject: 'återställning av lösenord',
+                subject: 'Password reset link',
                 html: `Reset password link: http://localhost:8001/reset/${resetToken}`
             })
         })
@@ -152,17 +152,33 @@ router.route('/reset/:token')
         res.redirect('/login');
     })
 
+router.route('/wishlist')
+    .get(verifyToken, async (req, res) => {
+        const user = await User.findOne({ _id: req.body.user._id }).populate('wishlist.productId')
+
+        res.render('wishlist', { user })
+    })
+
 router.route('/wishlist/:id')
-    .get(async (req, res) => {
+    .get(verifyToken, async (req, res) => {
         //req.params.id
+        // HÄMTA EN SPECIFIK PRODUKT
         const product = await Product.findOne({ _id: req.params.id })
 
         // HÄMTA EN SPECIFIK USER
-        const user = await User.findOne({ email: 'ninasse@hotmail.com' })
-        user.addToWishlist(product)
+        const user = await User.findOne({ _id: req.body.user._id })
+        await user.addToWishlist(product)
 
-        res.send('Added to wishlist!')
+        res.redirect('/wishlist')
     })
+
+router.route('/deletefromwishlist/:id')
+    .get(verifyToken, async (req, res) => {
+
+        const user = await User.findOne({ _id: req.body.user._id })
+        user.removeFromWishlist(req.params.id)
+        res.redirect('/wishlist');
+    });
 
 module.exports = router;
 

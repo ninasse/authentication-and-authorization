@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<%- include ("headers.ejs") %>
 
 <body>
     <% products.forEach(product => { %>
@@ -17,25 +10,13 @@
     </div>
     <% }) %>
 
-    <% if(products.length >= 1) { %>
-    <div class="pagination">
-        <% if(currentPage !==1 && prevPage !==1) { %>
-        <a href="/products/?page=1">1</a>
-        <% } %>
-        <% if(hasNextPage){ %>
-        <a href="/products/?page=<%=nextPage%>"><%= nextPage %></a>
-        <% } %>
-        <% if(hasPrevPage){ %>
-        <a href="/products/?page=<%=prevPage%>"><%= prevPage %></a>
-        <% } %>
-        <!-- <% if(currentPage){ %> -->
-        <!-- <a href="/products/?page=<%=currentPage%>"><%= currentPage %></a> -->
-        <!-- <% } %> -->
-        <% if(lastPage !==currentPage && nextPage !==lastPage){ %>
-        <a href="/products/?page=<%=lastPage%>"><%= lastPage %></a>
+    <div>
+        <% let counter = 1 %>
+        <% for(let i = productsPerPage; i < productAmount; i += productsPerPage) { %>
+        <a href="/products/?page=<%counter%>"><%= counter%></a>
+        <% counter++; %>
         <% } %>
     </div>
-    <% } %>
 </body>
 
 </html>

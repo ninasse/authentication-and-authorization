@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
         console.log('user info: ', user);
 
         // VALIDERINGSDATA TILL SERVER
-        req.user = user;
+        req.body = user;
         next();
     }
     else {

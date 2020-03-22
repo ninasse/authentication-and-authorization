@@ -2,15 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const config = require('./config/config');
 const userRoutes = require('./router/userRoutes');
-const productRoutes = require('./router/productRouter')
-const cookieParser = require('cookie-parser')
+const productRoutes = require('./router/productRouter');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
-app.use(cookieParser())
-app.use(express.urlencoded({ extended: true }))
-app.use(userRoutes)
-app.use(productRoutes)
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(userRoutes);
+app.use(productRoutes);
 
 app.set('view engine', 'ejs');
 
