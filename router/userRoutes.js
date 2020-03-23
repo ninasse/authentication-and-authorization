@@ -17,11 +17,6 @@ const transport = nodemailer.createTransport(nodemailerSendGridTransport({
     }
 }))
 
-router.route('/')
-
-    .get((req, res) => {
-        res.render('index.ejs')
-    })
 
 router.route('/signup')
 

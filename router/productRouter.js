@@ -6,6 +6,12 @@ const verifyToken = require('./verifyToken');
 const router = express.Router();
 
 
+router.route('/')
+
+    .get((req, res) => {
+        res.render('index.ejs')
+    })
+
 router.route('/products')
 
     .get(async (req, res) => {
